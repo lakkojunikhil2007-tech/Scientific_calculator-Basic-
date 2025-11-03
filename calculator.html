@@ -1,0 +1,180 @@
+<link rel="stylesheet" href="st.css">
+<div class="mode-toggle">
+  <label>
+    <input type="radio" name="mode" value="deg" checked> Degrees
+  </label>
+  <label>
+    <input type="radio" name="mode" value="rad"> Radians
+  </label>
+</div>
+
+<div class="calculator">
+
+  <div id="display">0</div>
+
+  <div class="buttons">
+
+    <!-- Row 1 -->
+    <button class="btn function" data-op="ac">AC</button>
+    <button class="btn function" data-op="sqrt">√</button>
+    <button class="btn function" data-op="log">log</button>
+    <button class="btn operator" data-op="/">÷</button>
+
+    <!-- Row 2 -->
+    <button class="btn number">7</button>
+    <button class="btn number">8</button>
+    <button class="btn number">9</button>
+    <button class="btn operator" data-op="*">×</button>
+
+    <!-- Row 3 -->
+    <button class="btn number">4</button>
+    <button class="btn number">5</button>
+    <button class="btn number">6</button>
+    <button class="btn operator" data-op="-">−</button>
+
+    <!-- Row 4 -->
+    <button class="btn number">1</button>
+    <button class="btn number">2</button>
+    <button class="btn number">3</button>
+    <button class="btn operator" data-op="+">+</button>
+
+    <!-- Row 5 -->
+    <button class="btn number">0</button>
+    <button class="btn number">.</button>
+    <button class="btn function" data-op="pow">xʸ</button>
+    <button class="btn equals">=</button>
+
+    <!-- Row 6: Trigonometry -->
+    <button class="btn function" data-op="sin">sin</button>
+    <button class="btn function" data-op="cos">cos</button>
+    <button class="btn function" data-op="tan">tan</button>
+
+    <!-- Row 7: Exponential -->
+    <button class="btn function" data-op="exp">eˣ</button>
+
+  </div>
+
+</div>
+
+<script>
+let display = document.getElementById("display");
+let current = "";
+let operator = null;
+let previous = "";
+
+function isDegreesMode() {
+    return document.querySelector('input[name="mode"]:checked').value === "deg";
+}
+
+function toRadians(x) {
+    return x * (Math.PI / 180);
+}
+
+function cleanOutput(value) {
+    if (Math.abs(value) < 1e-10) return 0;   // treat tiny values as zero
+    return Number(value.toFixed(10));       // round output to 10 decimals
+}
+
+function updateDisplay(value) {
+    display.textContent = value;
+}
+
+// Number & decimal buttons
+document.querySelectorAll(".number").forEach(btn => {
+    btn.addEventListener("click", () => {
+        current += btn.textContent;
+        updateDisplay(current);
+    });
+});
+
+// Operator buttons (+, -, *, /)
+document.querySelectorAll(".operator").forEach(btn => {
+    btn.addEventListener("click", () => {
+        operator = btn.dataset.op;
+        previous = current;
+        current = "";
+    });
+});
+
+// Function buttons (sqrt, log, sin etc.)
+document.querySelectorAll(".function").forEach(btn => {
+    btn.addEventListener("click", () => {
+        let op = btn.dataset.op;
+        let x = parseFloat(current);
+
+        switch(op) {
+            case "ac":
+                current = "";
+                previous = "";
+                operator = null;
+                updateDisplay("0");
+                return;
+
+            case "sqrt":
+                current = Math.sqrt(x);
+                break;
+
+            case "log":
+                current = Math.log10(x);
+                break;
+
+            case "sin":
+                current = isDegreesMode() ? Math.sin(toRadians(x)) : Math.sin(x);
+                current = cleanOutput(current);
+                break;
+
+            case "cos":
+                current = isDegreesMode() ? Math.cos(toRadians(x)) : Math.cos(x);
+                current = cleanOutput(current);
+                break;
+
+            case "tan":
+                current = isDegreesMode() ? Math.tan(toRadians(x)) : Math.tan(x);
+                current = cleanOutput(current);
+                break;
+
+            case "exp":
+                current = Math.exp(x);
+                break;
+
+            case "pow":
+                previous = x;
+                operator = "pow";
+                current = "";
+                return;
+        }
+        updateDisplay(current);
+    });
+});
+
+// Equals button
+document.querySelector(".equals").addEventListener("click", () => {
+    let x = parseFloat(previous);
+    let y = parseFloat(current);
+
+    let result;
+
+    switch(operator) {
+        case "+":
+            result = x + y;
+            break;
+        case "-":
+            result = x - y;
+            break;
+        case "*":
+            result = x * y;
+            break;
+        case "/":
+            result = x / y;
+            break;
+        case "pow":
+            result = Math.pow(x, y);
+            break;
+        default:
+            return;
+    }
+
+    current = result;
+    updateDisplay(result);
+});
+</script>
