@@ -114,9 +114,9 @@ Uses input directly
 - Responsive button press animation  
 
 ---
-
-
-
+<p align="center">
+  <img src="./Calculator_home.png" width="500">
+</p>
 
 ## ✅ Future Enhancements (optional)
 
