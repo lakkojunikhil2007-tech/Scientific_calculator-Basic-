@@ -132,7 +132,7 @@ Uses input directly
 
 ## 👨‍💻 Author  
 **Lakkoju Nikhil Sai Phaneendra**  
-  linkedin.com/in/lakkoju-nikhil
-  github.com/lakkojunikhil2007-tech
+  [My linkedin](https://linkedin.com/in/lakkoju-nikhil)
+  [My github](https://github.com/lakkojunikhil2007-tech)
 
 ---
